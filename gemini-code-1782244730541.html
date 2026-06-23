@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Versant Sentence Completion</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px 0;
+    }
+    .container {
+        width: 800px;
+        background: #fff;
+        border: 2px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 0;
+        position: relative;
+        min-height: 450px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 2px solid #f4f4f4;
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    .icon-f {
+        background-color: #3e3e3e;
+        color: white;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    .title {
+        color: #1f3b6c;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .header-right {
+        color: #1f3b6c;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .progress-counter {
+        font-weight: bold;
+        color: #333;
+        font-size: 18px;
+    }
+    
+    /* --- INSTRUCTIONS SCREEN STYLES --- */
+    #instructions-container {
+        display: block; 
+    }
+    .instructions-text-banner {
+        background-color: #f9f9f9;
+        padding: 15px 30px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #333;
+        line-height: 1.4;
+        border-bottom: 1px solid #eee;
+    }
+    .demo-area {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px 40px;
+    }
+    .demo-box-wrapper {
+        width: 48%;
+    }
+    .demo-label {
+        font-weight: bold;
+        color: #1f3b6c;
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+    .demo-box {
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        color: white;
+        font-size: 15px;
+        padding: 0 20px;
+        text-align: center;
+    }
+    .see-box {
+        background-color: #4a4a4a;
+    }
+    .type-box {
+        background-color: #2b4570; 
+    }
+    .demo-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        font-size: 30px;
+        opacity: 0.9;
+    }
+    .instructions-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 40px 30px 40px;
+        gap: 20px;
+    }
+    .action-btn {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    .action-btn span {
+        border: 2px solid #666;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    /* --- QUIZ SCREEN STYLES --- */
+    #quiz-container {
+        display: none; 
+    }
+    .instructions {
+        color: #1f3b6c;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 20px 30px;
+    }
+    .test-box {
+        margin: 0 30px 20px 30px;
+        border: 1px solid #1f3b6c;
+        border-top: 40px solid #1f3b6c;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+        color: #888;
+        font-size: 16px;
+    }
+    .input-box {
+        border: 1px solid #7cb3e3;
+        border-radius: 3px;
+        padding: 5px;
+        font-size: 16px;
+        width: 120px;
+        text-align: center;
+        margin: 0 5px;
+        outline: none;
+        box-shadow: 0 0 5px rgba(124, 179, 227, 0.5);
+    }
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 10px 30px 30px 30px;
+    }
+    .timer-bar-container {
+        width: 60px;
+        height: 8px;
+        background: #e0e0e0;
+        margin-right: 10px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .timer-bar {
+        height: 100%;
+        background: #28a745;
+        width: 100%;
+        transition: width 1s linear;
+    }
+    .time-text {
+        font-weight: bold;
+        font-size: 16px;
+        margin-right: 20px;
+    }
+    .next-btn {
+        background: none;
+        border: none;
+        color: #3fa9f5;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    .next-btn span {
+        border: 2px solid #3fa9f5;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+    }
+
+    /* --- RESULTS STYLES --- */
+    #results-container {
+        display: none;
+        padding: 30px 40px;
+        text-align: center;
+    }
+    .feedback-list {
+        margin-top: 20px;
+        max-height: 350px;
+        overflow-y: auto;
+        text-align: left;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+    .feedback-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        line-height: 1.5;
+    }
+    .feedback-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .correct-ans {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .wrong-ans {
+        color: #dc3545;
+        font-weight: bold;
+        text-decoration: line-through;
+    }
+    .correction {
+        display: block;
+        color: #1f3b6c;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container" id="app-container">
+    
+    <div id="instructions-container">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon-f">F</div>
+                <div class="title">Sentence Completion</div>
+            </div>
+            <div class="header-right">Instructions</div>
+        </div>
+        
+        <div class="instructions-text-banner">
+            Please type one word that best fits the meaning of the sentence. Type only one word. You will have 20 seconds for each sentence. Click "Next" when you are finished.
+        </div>
+        
+        <div class="demo-area">
+            <div class="demo-box-wrapper">
+                <div class="demo-label">You see:</div>
+                <div class="demo-box see-box">
+                    <span>It's _________ tonight. Bring your sweater.</span>
+                    <div class="demo-icon">👁️</div>
+                </div>
+            </div>
+            <div class="demo-box-wrapper">
+                <div class="demo-label">You type:</div>
+                <div class="demo-box type-box">
+                    <i>cold</i>
+                    <div class="demo-icon">⌨️</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions-footer">
+            <button class="action-btn"><span>↻</span> Replay</button>
+            <button class="action-btn" onclick="startTest()"><span>➔</span> Next</button>
+        </div>
+    </div>
+
+    <div id="quiz-container">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon-f">F</div>
+                <div class="title">Sentence Completion</div>
+            </div>
+            <div class="progress-counter" id="progress-text">1 / 30</div>
+        </div>
+        
+        <div class="instructions">Complete the sentence.</div>
+        
+        <div class="test-box">
+            <div>
+                <span id="sentence-start">I had to take out a loan from the </span>
+                <input type="text" id="answer-input" class="input-box" autocomplete="off">
+                <span id="sentence-end"> to cover the cost of replacing the roof of my house.</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="timer-bar-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="time-text" id="time-text">00'20"</div>
+            <button class="next-btn" onclick="nextQuestion()"><span>➔</span> Next</button>
+        </div>
+    </div>
+
+    <div id="results-container">
+        <h2 style="color: #1f3b6c; margin-top: 0;">Practice Complete!</h2>
+        <h1 id="score-text" style="margin: 10px 0;"></h1>
+        <p id="feedback-text" style="font-size: 16px; color: #555; margin-bottom: 20px;"></p>
+        
+        <div id="feedback-breakdown"></div>
+
+        <button onclick="location.reload()" style="margin-top:25px; padding: 12px 25px; background: #1f3b6c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">Restart Practice</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { pre: "It's raining outside. Don't forget your ", post: ".", answers: ["umbrella", "raincoat"] },
+        { pre: "I usually drink a cup of ", post: " in the morning.", answers: ["coffee", "tea", "water"] },
+        { pre: "Please turn off the ", post: " before you leave the room.", answers: ["lights", "tv", "lamp"] },
+        { pre: "What time does the ", post: " leave the station?", answers: ["train", "bus", "flight"] },
+        { pre: "I need to wash my hands. Where is the ", post: "?", answers: ["bathroom", "restroom", "sink"] },
+        { pre: "Can you pass me the ", post: ", please? My soup needs more flavor.", answers: ["salt", "pepper", "sugar"] },
+        { pre: "She is going to the ", post: " to buy some fresh bread.", answers: ["bakery", "store", "supermarket"] },
+        { pre: "My shoes are dirty. I need to ", post: " them.", answers: ["clean", "wash", "wipe"] },
+        { pre: "Happy ", post: "! Did you get a lot of presents?", answers: ["birthday", "anniversary", "holidays"] },
+        { pre: "Put on your ", post: ", it's very cold outside.", answers: ["jacket", "coat", "sweater"] },
+        { pre: "I had to take out a loan from the ", post: " to cover the cost of replacing the roof.", answers: ["bank", "lender"] },
+        { pre: "We are going to ", post: " a car for our road trip next week.", answers: ["rent", "hire", "buy"] },
+        { pre: "If you have a headache, you should take some ", post: ".", answers: ["medicine", "aspirin", "painkillers", "pills"] },
+        { pre: "The restaurant was completely full, so we had to wait for a ", post: ".", answers: ["table", "booth", "seat"] },
+        { pre: "He forgot his password and couldn't log into his ", post: ".", answers: ["account", "computer", "email"] },
+        { pre: "Make sure to ", post: " your seatbelt when driving.", answers: ["fasten", "wear", "buckle"] },
+        { pre: "The flight was delayed due to bad ", post: ".", answers: ["weather", "storms"] },
+        { pre: "Can I borrow your ", post: "? My phone battery is dead.", answers: ["charger", "cable", "adapter"] },
+        { pre: "She applied for the ", post: " but hasn't heard back yet.", answers: ["job", "position", "role"] },
+        { pre: "Let's look at the ", post: " to see what we want to eat.", answers: ["menu", "options", "board"] },
+        { pre: "The warranty does not cover accidental ", post: " to the device.", answers: ["damage", "breakage", "drops"] },
+        { pre: "We need to ", post: " our flight tickets before we go to the airport.", answers: ["print", "confirm", "book"] },
+        { pre: "To cancel your subscription, please contact customer ", post: ".", answers: ["service", "support", "care"] },
+        { pre: "Due to unforeseen circumstances, the meeting has been ", post: ".", answers: ["canceled", "postponed", "delayed"] },
+        { pre: "Please review the attached document and provide your ", post: " by Friday.", answers: ["feedback", "comments", "approval"] },
+        { pre: "Ensure you have a stable internet ", post: " before starting the exam.", answers: ["connection", "network", "signal"] },
+        { pre: "The hotel requires a minimum ", post: " of two nights on weekends.", answers: ["stay", "booking", "reservation"] },
+        { pre: "Without sufficient ", post: ", the police cannot arrest the suspect.", answers: ["evidence", "proof", "data"] },
+        { pre: "The company offered him a higher ", post: " to stay with them.", answers: ["salary", "wage", "position", "pay"] },
+        { pre: "To complete the registration, you must verify your ", post: " with a valid ID.", answers: ["identity", "email", "address"] }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let timeLeft = 20;
+    let timerInterval;
+    let userAnswers = []; // Array to store student inputs
+
+    const startEl = document.getElementById('sentence-start');
+    const endEl = document.getElementById('sentence-end');
+    const inputEl = document.getElementById('answer-input');
+    const progressText = document.getElementById('progress-text');
+    const timeText = document.getElementById('time-text');
+    const timerBar = document.getElementById('timer-bar');
+
+    function startTest() {
+        document.getElementById('instructions-container').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentIndex >= questions.length) {
+            showResults();
+            return;
+        }
+        
+        let q = questions[currentIndex];
+        startEl.innerText = q.pre;
+        endEl.innerText = q.post;
+        inputEl.value = "";
+        progressText.innerText = `${currentIndex + 1} / 30`;
+        
+        inputEl.focus();
+        
+        timeLeft = 20;
+        updateTimerUI();
+        clearInterval(timerInterval);
+        timerInterval = setInterval(countdown, 1000);
+    }
+
+    function countdown() {
+        timeLeft--;
+        updateTimerUI();
+        if (timeLeft <= 0) {
+            nextQuestion(); 
+        }
+    }
+
+    function updateTimerUI() {
+        let secondsStr = timeLeft < 10 ? "0" + timeLeft : timeLeft;
+        timeText.innerText = `00'${secondsStr}"`;
+        let widthPct = (timeLeft / 20) * 100;
+        timerBar.style.width = widthPct + "%";
+        
+        if(timeLeft <= 5) {
+            timerBar.style.background = "#dc3545"; // turn red
+        } else {
+            timerBar.style.background = "#28a745"; // green
+        }
+    }
+
+    function nextQuestion() {
+        let userAnswer = inputEl.value.trim().toLowerCase();
+        let correctAnswers = questions[currentIndex].answers;
+        
+        // Save user's answer
+        userAnswers.push(userAnswer);
+        
+        if (correctAnswers.includes(userAnswer)) {
+            score++;
+        }
+        
+        currentIndex++;
+        loadQuestion();
+    }
+
+    // Allow Enter key to submit
+    inputEl.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            nextQuestion();
+        }
+    });
+
+    function showResults() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-container').style.display = 'none';
+        let resultsContainer = document.getElementById('results-container');
+        resultsContainer.style.display = 'block';
+        
+        document.getElementById('score-text').innerText = `Your Score: ${score} / 30`;
+        
+        let feedback = "";
+        let percentage = (score / 30) * 100;
+        
+        if (percentage >= 90) {
+            feedback = "Excellent work! Review your results below.";
+        } else if (percentage >= 70) {
+            feedback = "Great job! Check the breakdown below to see where you can improve.";
+        } else if (percentage >= 50) {
+            feedback = "Good effort. Review the corrections below to learn the better context clues.";
+        } else {
+            feedback = "Keep practicing! Reviewing your mistakes below will help build your vocabulary.";
+        }
+        document.getElementById('feedback-text').innerText = feedback;
+
+        // Generate Breakdown HTML
+        let breakdownHTML = '<div class="feedback-list">';
+        for (let i = 0; i < questions.length; i++) {
+            let q = questions[i];
+            let ans = userAnswers[i];
+            let isCorrect = q.answers.includes(ans);
+            
+            let displayAns = ans === "" ? "(blank)" : ans;
+            let statusClass = isCorrect ? "correct-ans" : "wrong-ans";
+            let statusIcon = isCorrect ? "✔️" : "❌";
+
+            breakdownHTML += `<div class="feedback-item">
+                <strong>${i + 1}.</strong> ${q.pre} 
+                <span class="${statusClass}">${displayAns}</span> ${statusIcon} 
+                ${q.post}`;
+
+            // Add the correct answer list if they got it wrong
+            if (!isCorrect) {
+                breakdownHTML += `<span class="correction">Accepted answers: ${q.answers.join(', ')}</span>`;
+            }
+
+            breakdownHTML += `</div>`;
+        }
+        breakdownHTML += '</div>';
+
+        document.getElementById('feedback-breakdown').innerHTML = breakdownHTML;
+    }
+</script>
+
+</body>
+</html>
